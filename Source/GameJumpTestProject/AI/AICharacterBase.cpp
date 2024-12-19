@@ -12,7 +12,6 @@ AAICharacterBase::AAICharacterBase()
 {
 	AIControllerClass = AGJTP_AIControllerBase::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	// Pawn
@@ -22,8 +21,6 @@ AAICharacterBase::AAICharacterBase()
 
 	// Capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
-	//GetCapsuleComponent()->SetCollisionProfileName();
-	// 
 	
 	// Mesh
 	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -100.0f), FRotator(0.0f, -90.0f, 0.0f));
@@ -61,8 +58,6 @@ void AAICharacterBase::PostInitializeComponents()
 	GetCharacterMovement()->MaxWalkSpeed = 450.0f;
 	GetCharacterMovement()->GravityScale = BaseStat->OriginalGravityScale;
 
-	// GetCharacterMovement()->JumpZVelocity = StatComponent->GetStatData()->JumpZVelocity;
-	// GetCharacterMovement()->AirControl = StatComponent->GetStatData()->AirControl;
 }
 
 // Called when the game starts or when spawned
@@ -86,16 +81,8 @@ void AAICharacterBase::Tick(float DeltaTime)
 	{
 		JumpSequence(BaseStat->GravityChangeType);
 		
-
-
-
-
-
-
-		// 캐릭터가 다시 걷기 상태가 된다면
 		if (GetCharacterMovement()->MovementMode == MOVE_Walking)
 		{
-			// 점프 상태 초기화
 			bIsJumping = false;
 			Movement->GravityScale = BaseStat->OriginalGravityScale;
 		}
@@ -138,28 +125,16 @@ void AAICharacterBase::JumpSequence(uint8 Type)
 		break;
 		case 1:
 		{
-			// 점프 시작한 위치로 부터 얼마나 위로 올라갔는지 z값 계산
 			float CurrentZValue = GetActorLocation().Z - JumpStartZPos;
 
-			// z값이 임계치보다 커진 경우
 			if (CurrentZValue > BaseStat->HeightThreshold)
 			{
-				// 중력값 변경
 				Movement->GravityScale = BaseStat->ManipulatedGravityScale;
 			}
-			// z값이 임계치보다 작아진 경우
 			else
 			{
-				// 기존 중력값으로 변경
 				Movement->GravityScale = BaseStat->OriginalGravityScale;
 			}
-		}
-		break;
-		case 2:
-		{
-
-
-
 		}
 		break;
 	default:
